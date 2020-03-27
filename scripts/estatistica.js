@@ -1,10 +1,15 @@
 var ponto = ee.Geometry.Point([-56.087416439244976,-9.898308621320513]);
 
+var inicial = '2018-01-01'
+var final = '2019-12-31'
+
 var image = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
-  .filter('CLOUD_COVER > 10')
-  .filter('CLOUD_COVER < 20')
+  .filterMetadata('CLOUD_COVER','less_than',5)
+  .filterDate(inicial, final)
   .filterBounds(ponto)
   .select('B6','B5','B4');
+
+print('Quantidade de imagens', image.size());
 
 //Gerar estatísticas sobre cobertura de nuvens
 var cloudStats = image.aggregate_stats('CLOUD_COVER');
